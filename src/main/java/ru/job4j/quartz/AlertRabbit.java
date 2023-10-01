@@ -12,7 +12,6 @@ import java.util.Properties;
 
 public class AlertRabbit {
     private static Properties getProperties() {
-        int a = 0;
         Properties config = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             config.load(in);
