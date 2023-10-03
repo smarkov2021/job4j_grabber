@@ -3,6 +3,7 @@ package ru.job4j.quartz;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -17,20 +18,23 @@ import static org.quartz.SimpleScheduleBuilder.*;
 public class AlertRabbit {
 
     private static Connection cn;
+    private static Properties config = new Properties();
 
-    private static Connection createConnection() {
+    private static void getProperties() {
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
-            Properties config = new Properties();
             config.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Connection getConnection() throws ClassNotFoundException, SQLException {
             Class.forName(config.getProperty("driver-class-name"));
             return DriverManager.getConnection(
                     config.getProperty("url"),
                     config.getProperty("username"),
                     config.getProperty("password")
             );
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
     }
 
 
@@ -41,16 +45,17 @@ public class AlertRabbit {
     }
     public static void main(String[] args) {
         try {
+            getProperties();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
-            cn = createConnection();
+            cn = getConnection();
             data.put("connection", cn);
             JobDetail job = newJob(Rabbit.class)
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(5)
+                    .withIntervalInSeconds(Integer.parseInt(config.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
