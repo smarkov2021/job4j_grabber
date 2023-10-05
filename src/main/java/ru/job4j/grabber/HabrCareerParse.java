@@ -22,30 +22,32 @@ public class HabrCareerParse {
 
     private static List<String> generatePagesLinks(int number) {
         List<String> pages = new ArrayList<>();
-        for (int i = 1; i <= number; i++) {
+        for (int i = 0; i <= number; i++) {
             pages.add(PAGE_LINK + "?page=" + i);
         }
         return pages;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         generatePagesLinks(NUMB_OF_PAGES).stream().forEach(currentLink -> {
             Connection connection = Jsoup.connect(currentLink);
             Document document = null;
             try {
-            document = connection.get();
-            Elements rows = document.select(".vacancy-card__inner");
-            rows.forEach(row -> {
-                Element titleElement = row.select(".vacancy-card__title").first();
-                Element dateTime = row.select(".vacancy-card__date").first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                String date = dateTime.child(0).attr("datetime");
-                System.out.printf("%s %s %s %n", vacancyName, link, date);
+                document = connection.get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (document != null) {
+                Elements rows = document.select(".vacancy-card__inner");
+                rows.forEach(row -> {
+                    Element titleElement = row.select(".vacancy-card__title").first();
+                    Element dateTime = row.select(".vacancy-card__date").first();
+                    Element linkElement = titleElement.child(0);
+                    String vacancyName = titleElement.text();
+                    String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+                    String date = dateTime.child(0).attr("datetime");
+                    System.out.printf("%s %s %s %n", vacancyName, link, date);
                 });
-                    } catch (IOException e) {
-                    throw new RuntimeException(e);
             }
         });
     }
