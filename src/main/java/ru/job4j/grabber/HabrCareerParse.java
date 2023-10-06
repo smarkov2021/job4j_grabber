@@ -28,8 +28,25 @@ public class HabrCareerParse {
         return pages;
     }
 
+    private static String retrieveDescription(String link) throws IOException {
+        List<String> rslList = new ArrayList<>();
+        StringBuilder rsl = new StringBuilder();
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        Elements rows = document.select(".faded-content__container");
+        rows.forEach(row -> {
+            Element titleElement = row.select(".vacancy-description__text").first();
+            String vacancyDescr = titleElement.text();
+            rslList.add(vacancyDescr);
+        });
+        for(String elem : rslList) {
+            rsl.append(elem);
+        }
+        return rsl.toString();
+    }
+
     public static void main(String[] args) {
-        generatePagesLinks(NUMB_OF_PAGES).stream().forEach(currentLink -> {
+        generatePagesLinks(NUMB_OF_PAGES).forEach(currentLink -> {
             Connection connection = Jsoup.connect(currentLink);
             Document document = null;
             try {
