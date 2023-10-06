@@ -39,7 +39,7 @@ public class HabrCareerParse {
             String vacancyDescr = titleElement.text();
             rslList.add(vacancyDescr);
         });
-        for(String elem : rslList) {
+        for (String elem : rslList) {
             rsl.append(elem);
         }
         return rsl.toString();
