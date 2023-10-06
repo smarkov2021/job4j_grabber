@@ -28,11 +28,11 @@ public class Post {
             return false;
         }
         Post post = (Post) o;
-        return id == post.id && title.equals(post.title) && description.equals(post.description);
+        return id == post.id && link.equals(post.link);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description);
+        return Objects.hash(id, link);
     }
 }
