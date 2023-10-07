@@ -30,10 +30,26 @@ public class HabrCareerParse implements Parse {
         this.dateTimeParser = dateTimeParser;
     }
 
+    private Post createPost(Element row, int currentIndex) {
+        Element titleElement = row.select(".vacancy-card__title").first();
+        Element dateTime = row.select(".vacancy-card__date").first();
+        Element linkElement = titleElement.child(0);
+        String vacancyName = titleElement.text();
+        String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+        LocalDateTime vacancyDate = dateTimeParser.parse(dateTime.child(0).attr("datetime"));
+        String vacancyDescription = null;
+        try {
+            vacancyDescription = retrieveDescription(vacancyLink);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Post(currentIndex, vacancyName, vacancyLink, vacancyDescription, vacancyDate);
+    }
+
     @Override
-    public List<Post> list(String link) throws IOException {
+    public List<Post> list(String link) {
         List<Post> rsl = new ArrayList<>();
-        generatePagesLinks(NUMB_OF_PAGES).stream().forEach(currentLink -> {
+        generatePagesLinks().stream().forEach(currentLink -> {
             Connection connection = Jsoup.connect(currentLink);
             Document document = null;
             try {
@@ -44,36 +60,26 @@ public class HabrCareerParse implements Parse {
             if (document != null) {
             Elements rows = document.select(".vacancy-card__inner");
             rows.forEach(row -> {
-                Element titleElement = row.select(".vacancy-card__title").first();
-                Element dateTime = row.select(".vacancy-card__date").first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                LocalDateTime vacancyDate = dateTimeParser.parse(dateTime.child(0).attr("datetime"));
-                String vacancyDescription = null;
-                try {
-                    vacancyDescription = retrieveDescription(vacancyLink);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                int vacancyId = rsl.size() + 1;
-                Post vacancy = new Post(vacancyId, vacancyName, vacancyLink, vacancyDescription, vacancyDate);
-                rsl.add(vacancy);
-            });
+                    rsl.add(createPost(row, rsl.size() + 1));
+                });
             }
         });
         return rsl;
     }
 
-    private static List<String> generatePagesLinks(int number) {
+    private List<String> generatePagesLinks() {
         List<String> pages = new ArrayList<>();
-        for (int i = 0; i <= number; i++) {
-            pages.add(PAGE_LINK + "?page=" + i);
+        for (int i = 0; i <= NUMB_OF_PAGES; i++) {
+            StringBuilder elem = new StringBuilder();
+            elem.append(PAGE_LINK)
+                .append("?page=")
+                .append(i);
+            pages.add(elem.toString());
         }
         return pages;
     }
 
-    private static String retrieveDescription(String link) throws IOException {
+    private String retrieveDescription(String link) throws IOException {
         List<String> rslList = new ArrayList<>();
         StringBuilder rsl = new StringBuilder();
         Connection connection = Jsoup.connect(link);
