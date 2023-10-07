@@ -33,26 +33,34 @@ public class HabrCareerParse implements Parse {
     @Override
     public List<Post> list(String link) throws IOException {
         List<Post> rsl = new ArrayList<>();
-        Connection connection = Jsoup.connect(link);
-        Document document = null;
-        document = connection.get();
-        Elements rows = document.select(".vacancy-card__inner");
-        rows.forEach(row -> {
-            Element titleElement = row.select(".vacancy-card__title").first();
-            Element dateTime = row.select(".vacancy-card__date").first();
-            Element linkElement = titleElement.child(0);
-            String vacancyName = titleElement.text();
-            String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-            LocalDateTime vacancyDate = dateTimeParser.parse(dateTime.child(0).attr("datetime"));
-            String vacancyDescription = null;
+        generatePagesLinks(NUMB_OF_PAGES).stream().forEach(currentLink -> {
+            Connection connection = Jsoup.connect(currentLink);
+            Document document = null;
             try {
-                vacancyDescription = retrieveDescription(vacancyLink);
+                document = connection.get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            int vacancyId = rsl.size() + 1;
-            Post vacancy = new Post(vacancyId, vacancyName, vacancyLink, vacancyDescription, vacancyDate);
-            rsl.add(vacancy);
+            if (document != null) {
+            Elements rows = document.select(".vacancy-card__inner");
+            rows.forEach(row -> {
+                Element titleElement = row.select(".vacancy-card__title").first();
+                Element dateTime = row.select(".vacancy-card__date").first();
+                Element linkElement = titleElement.child(0);
+                String vacancyName = titleElement.text();
+                String vacancyLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+                LocalDateTime vacancyDate = dateTimeParser.parse(dateTime.child(0).attr("datetime"));
+                String vacancyDescription = null;
+                try {
+                    vacancyDescription = retrieveDescription(vacancyLink);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int vacancyId = rsl.size() + 1;
+                Post vacancy = new Post(vacancyId, vacancyName, vacancyLink, vacancyDescription, vacancyDate);
+                rsl.add(vacancy);
+            });
+            }
         });
         return rsl;
     }
@@ -85,9 +93,7 @@ public class HabrCareerParse implements Parse {
     public static void main(String[] args) throws IOException {
         DateTimeParser dateTimeParser = new HabrCareerDateTimeParser();
         HabrCareerParse habrCareerParse = new HabrCareerParse(dateTimeParser);
-        List<Post> rsl = new ArrayList<>();
-        rsl = habrCareerParse.list(PAGE_LINK);
-        for (Post post : rsl) {
+        for (Post post : habrCareerParse.list(PAGE_LINK)) {
             System.out.println(post);
         }
     }
