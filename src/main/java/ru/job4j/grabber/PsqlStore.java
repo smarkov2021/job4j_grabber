@@ -87,21 +87,4 @@ public class PsqlStore implements Store {
             cnn.close();
         }
     }
-
-    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
-        InputStream in = PsqlStore.class.getClassLoader().getResourceAsStream("rabbit.properties");
-        Properties cf = new Properties();
-        cf.load(in);
-        Store pStore = new PsqlStore(cf);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Post newPost = new Post(1, "test", "test22", "test3", localDateTime);
-        Post secondPost = new Post(2, "test", "test2w2", "test3w", localDateTime);
-        pStore.save(newPost);
-        pStore.save(secondPost);
-        List<Post> rsl = pStore.getAll();
-        for (Post post : rsl) {
-            System.out.println("args = " + post);
-        }
-        System.out.println("args = " + pStore.findById(1));
-    }
 }

@@ -95,12 +95,4 @@ public class HabrCareerParse implements Parse {
         }
         return rsl.toString();
     }
-
-    public static void main(String[] args) throws IOException {
-        DateTimeParser dateTimeParser = new HabrCareerDateTimeParser();
-        HabrCareerParse habrCareerParse = new HabrCareerParse(dateTimeParser);
-        for (Post post : habrCareerParse.list(PAGE_LINK)) {
-            System.out.println(post);
-        }
-    }
 }
