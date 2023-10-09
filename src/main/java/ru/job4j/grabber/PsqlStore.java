@@ -39,8 +39,8 @@ public class PsqlStore implements Store {
 
     @Override
     public void save(Post post) {
-        try (PreparedStatement ps = cnn.prepareStatement("INSERT INTO post(name, text, link, created)"
-                + " values (?, ?, ?, ?) ON CONFLICT(link) DO NOTHING;")) {
+        try (PreparedStatement ps = cnn.prepareStatement("insert into post(name, text, link, created)"
+                + " values (?, ?, ?, ?) on conflict(link) do nothing;")) {
             ps.setString(1, post.getTitle());
             ps.setString(2, post.getDescription());
             ps.setString(3, post.getLink());
@@ -70,7 +70,7 @@ public class PsqlStore implements Store {
     public Post findById(int id) {
         Post rsl = null;
         try (PreparedStatement ps = cnn.prepareStatement("select  id, name, text, link, created from post"
-                + " where id = ? limit 1")) {
+                + " where id = ?")) {
             ps.setInt(1, id);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -94,8 +94,10 @@ public class PsqlStore implements Store {
         cf.load(in);
         Store pStore = new PsqlStore(cf);
         LocalDateTime localDateTime = LocalDateTime.now();
-        Post newPost = new Post(2, "test", "test22", "test3", localDateTime);
+        Post newPost = new Post(1, "test", "test22", "test3", localDateTime);
+        Post secondPost = new Post(2, "test", "test2w2", "test3w", localDateTime);
         pStore.save(newPost);
+        pStore.save(secondPost);
         List<Post> rsl = pStore.getAll();
         for (Post post : rsl) {
             System.out.println("args = " + post);
