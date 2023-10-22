@@ -11,7 +11,7 @@ public class Post {
 
     private List<Comment> comments;
 
-    public Post(Integer id, String text, List<Comment> comments) {
+    public Post(int id, String text, List<Comment> comments) {
         this.id = id;
         this.text = text;
         this.comments = comments;
@@ -22,11 +22,11 @@ public class Post {
         this.comments = comments;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,10 +45,5 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(id, text, comments);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 }

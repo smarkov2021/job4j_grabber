@@ -45,9 +45,4 @@ public class Comment {
     public int hashCode() {
         return Objects.hash(text, user);
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 }
