@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public class Fool {
 
-    Map<Predicate, String> rule = new HashMap<>();
+    private Map<Predicate, String> rule = new HashMap<>();
 
     public void init() {
         Predicate<Integer> firstCondition = el -> el % 3 == 0 && el % 5 != 0;
