@@ -16,7 +16,7 @@ public class ReportForDevelopers implements Report {
     private final DateTimeParser<Calendar> dateTimeParser;
 
     private final File target;
-//
+
     public ReportForDevelopers(Store store, DateTimeParser<Calendar> dateTimeParser, File target) {
         this.store = store;
         this.dateTimeParser = dateTimeParser;
