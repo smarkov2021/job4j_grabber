@@ -1,4 +1,4 @@
-package ru.job4j.ood.srp;
+package ru.job4j.ood.srp.task;
 
 public interface Calculator {
     public int addition(int a, int b);

@@ -1,4 +1,4 @@
-package ru.job4j.ood.srp;
+package ru.job4j.ood.srp.task;
 
 import java.util.ArrayList;
 import java.util.List;

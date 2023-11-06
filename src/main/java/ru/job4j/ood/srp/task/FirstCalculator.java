@@ -1,4 +1,6 @@
-package ru.job4j.ood.srp;
+package ru.job4j.ood.srp.task;
+
+import ru.job4j.ood.srp.task.Calculator;
 
 public class FirstCalculator implements Calculator {
     @Override
