@@ -1,11 +1,6 @@
 package ru.job4j.ood.srp.report;
 
 import org.junit.jupiter.api.Test;
-import ru.job4j.ood.srp.currency.Currency;
-import ru.job4j.ood.srp.currency.CurrencyConverter;
-import ru.job4j.ood.srp.currency.InMemoryCurrencyConverter;
-import ru.job4j.ood.srp.formatter.DateTimeParser;
-import ru.job4j.ood.srp.formatter.ReportDateTimeParser;
 import ru.job4j.ood.srp.model.Employee;
 import ru.job4j.ood.srp.store.MemStore;
 
@@ -14,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ReportXMLTest {
     @Test
@@ -31,7 +25,7 @@ class ReportXMLTest {
         StringBuilder expect = new StringBuilder()
                 .append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n")
                 .append("<employees>\n")
-                .append("    <employees>\n")
+                .append("    <employee>\n")
                 .append("        <fired>")
                 .append(formattedDate)
                 .append("</fired>\n")
@@ -40,8 +34,8 @@ class ReportXMLTest {
                 .append("</hired>\n")
                 .append("        <name>Ivan</name>\n")
                 .append("        <salary>100.0</salary>\n")
-                .append("    </employees>\n")
-                .append("    <employees>\n")
+                .append("    </employee>\n")
+                .append("    <employee>\n")
                 .append("        <fired>")
                 .append(formattedDate)
                 .append("</fired>\n")
@@ -50,7 +44,7 @@ class ReportXMLTest {
                 .append("</hired>\n")
                 .append("        <name>Sergey</name>\n")
                 .append("        <salary>300.0</salary>\n")
-                .append("    </employees>\n")
+                .append("    </employee>\n")
                 .append("</employees>\n");
         assertThat(engine.generate(em -> true)).isEqualTo(expect.toString());
     }

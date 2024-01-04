@@ -7,7 +7,7 @@ import ru.job4j.ood.srp.store.Store;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -31,8 +31,11 @@ public class ReportXML implements Report {
 
     @Override
     public String generate(Predicate<Employee> filter) {
-        var emp = new ArrayList<>(store.findBy(filter));
-        Employees employees = new Employees(emp);
+        List<ParsedEmployee> newEmpl = new ArrayList<>();
+        for (Employee em : store.findBy(filter)) {
+            newEmpl.add(new ParsedEmployee(em.getName(), em.getHired(), em.getFired(), em.getSalary()));
+        }
+        Employees employees = new Employees(newEmpl);
         String xml = "";
         try (StringWriter writer = new StringWriter()) {
             marshaller.marshal(employees, writer);
@@ -46,24 +49,76 @@ public class ReportXML implements Report {
         return xml;
     }
 
+    public static class ParsedEmployee {
+        private String name;
+        private Calendar hired;
+        private Calendar fired;
+        private double salary;
+
+        public ParsedEmployee() {
+        }
+        public ParsedEmployee(String name, Calendar hired, Calendar fired, double salary) {
+            this.name = name;
+            this.hired = hired;
+            this.fired = fired;
+            this.salary = salary;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Calendar getHired() {
+            return hired;
+        }
+
+        public void setHired(Calendar hired) {
+            this.hired = hired;
+        }
+
+        public Calendar getFired() {
+            return fired;
+        }
+
+        public void setFired(Calendar fired) {
+            this.fired = fired;
+        }
+
+        public double getSalary() {
+            return salary;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+    }
+
     @XmlRootElement(name = "employees")
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Employees {
-        private List<Employee> employees;
+        @XmlElement(name = "employee")
+        private List<ParsedEmployee> employees;
 
         public Employees() {
         }
-        public Employees(List<Employee> employees) {
-            this.employees = employees;
+        public Employees(List<ParsedEmployee> employees1) {
+            this.employees = employees1;
         }
 
-        public List<Employee> getEmployees() {
+        public List<ParsedEmployee> getEmployees() {
             return employees;
         }
 
-        public void setEmployees(List<Employee> employees) {
+        public void setEmployees(List<ParsedEmployee> employees) {
             this.employees = employees;
         }
     }
+
+
 
     public static void main(String[] args) throws JAXBException {
         MemStore store = new MemStore();
