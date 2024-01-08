@@ -1,4 +1,4 @@
-package ru.job4j.ood.lsp;
+package ru.job4j.ood.lsp.store;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

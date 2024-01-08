@@ -1,9 +1,7 @@
-package ru.job4j.ood.lsp;
+package ru.job4j.ood.lsp.store;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ControlQuality {
     private List<Store> listStorage = new ArrayList<>();

@@ -1,7 +1,4 @@
-package ru.job4j.ood.lsp;
-
-import java.util.ArrayList;
-import java.util.List;
+package ru.job4j.ood.lsp.store;
 
 public interface Store {
     public void addFood(Food food);

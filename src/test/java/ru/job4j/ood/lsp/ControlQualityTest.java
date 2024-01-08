@@ -1,13 +1,14 @@
 package ru.job4j.ood.lsp;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.job4j.ood.lsp.store.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ControlQualityTest {
     @Test
@@ -25,8 +26,8 @@ class ControlQualityTest {
         listFood.add(forTrash);
         ControlQuality controlQuality = new ControlQuality(listStorage, listFood);
         controlQuality.sort();
-        assertThat(trash.getFoodList().size()).isEqualTo(1);
-        assertThat(trash.getFoodList().contains(forTrash)).isTrue();
+        Assertions.assertThat(trash.getFoodList().size()).isEqualTo(1);
+        Assertions.assertThat(trash.getFoodList().contains(forTrash)).isTrue();
     }
 
     @Test
@@ -44,10 +45,10 @@ class ControlQualityTest {
         listFood.add(forShop);
         ControlQuality controlQuality = new ControlQuality(listStorage, listFood);
         controlQuality.sort();
-        assertThat(warehouse.getFoodList().size()).isEqualTo(0);
-        assertThat(trash.getFoodList().size()).isEqualTo(0);
-        assertThat(shop.getFoodList().size()).isEqualTo(1);
-        assertThat(shop.getFoodList().contains(forShop)).isTrue();
+        Assertions.assertThat(warehouse.getFoodList().size()).isEqualTo(0);
+        Assertions.assertThat(trash.getFoodList().size()).isEqualTo(0);
+        Assertions.assertThat(shop.getFoodList().size()).isEqualTo(1);
+        Assertions.assertThat(shop.getFoodList().contains(forShop)).isTrue();
     }
 
     @Test
@@ -65,8 +66,8 @@ class ControlQualityTest {
         listFood.add(forShop);
         ControlQuality controlQuality = new ControlQuality(listStorage, listFood);
         controlQuality.sort();
-        assertThat(shop.getFoodList().contains(forShop)).isTrue();
-        assertThat(forShop.getPrice()).isEqualTo(80.0);
+        Assertions.assertThat(shop.getFoodList().contains(forShop)).isTrue();
+        Assertions.assertThat(forShop.getPrice()).isEqualTo(80.0);
     }
 
     @Test
@@ -85,8 +86,8 @@ class ControlQualityTest {
         listFood.add(forWarehouse);
         ControlQuality controlQuality = new ControlQuality(listStorage, listFood);
         controlQuality.sort();
-        assertThat(warehouse.getFoodList().size()).isEqualTo(1);
-        assertThat(warehouse.getFoodList().contains(forWarehouse)).isTrue();
-        assertThat(forWarehouse.getPrice()).isEqualTo(100.0);
+        Assertions.assertThat(warehouse.getFoodList().size()).isEqualTo(1);
+        Assertions.assertThat(warehouse.getFoodList().contains(forWarehouse)).isTrue();
+        Assertions.assertThat(forWarehouse.getPrice()).isEqualTo(100.0);
     }
 }
